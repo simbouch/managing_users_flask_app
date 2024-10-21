@@ -3,10 +3,19 @@
 {% block title %}Add First User{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="text-center">Add the First User (Admin)</h1>
+    <h1 class="text-center">Add the First User</h1>
 
-    <form action="{{ url_for('add_first_user') }}" method="POST" class="mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alert alert-dismissible fade show" role="alert">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form action="/add_first_user" method="POST" class="mt-4">
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" class="form-control" id="username" name="username" required>
@@ -21,5 +30,4 @@
         </div>
         <button type="submit" class="btn btn-primary btn-block">Add User</button>
     </form>
-</div>
 {% endblock %}

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
+{% block title %}List of Users{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
     <h1 class="text-center">List of Users</h1>
 
     <table class="table table-striped mt-4">
@@ -10,6 +11,7 @@
                 <th>ID</th>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Role</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -19,31 +21,27 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
                 <td>
-                    {% if current_user.role == 'admin' or current_user.id == user.id %}
-                    <!-- Allow user to update their own info or allow admin to update others -->
-                    <a href="{{ url_for('update_user', id=user.id) }}" class="btn btn-warning btn-sm">Update</a>
                     {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('update_user', id=user.id) }}" class="btn btn-warning btn-sm">Update</a>
                     <form action="{{ url_for('delete_user', id=user.id) }}" method="POST" style="display:inline;">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
-                    {% endif %}
+                    {% elif current_user.id == user.id %}
+                    <a href="{{ url_for('update_user', id=user.id) }}" class="btn btn-warning btn-sm">Update My Account</a>
                     {% endif %}
                 </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="4" class="text-center">No users found</td>
+                <td colspan="5" class="text-center">No users found</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <!-- Admin-only button to add a new user -->
     {% if current_user.role == 'admin' %}
-    <div class="text-center">
-        <a href="{{ url_for('add_user') }}" class="btn btn-primary">Add User</a>
-    </div>
+    <a href="{{ url_for('add_user') }}" class="btn btn-primary">Add User</a>
     {% endif %}
-</div>
 {% endblock %}
